@@ -1,22 +1,33 @@
-import { Request, Response } from "express";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { NextFunction, Request, Response } from "express";
+import { sendResponse } from "../../utils/sendResponse";
+import httpStatus from "http-status-codes";
+import { UserServices } from "./user.service";
+import { catchAsync } from "../../utils/catchAsync";
 
-const createUser = async (req: Request, res: Response) => {
-    try {
-        // Logic to create a user
-        res.status(201).json({ message: "User created successfully" });
-    } catch (error) {
-        res.status(500).json({ error: "Failed to create user" });
-    }
-}
+const createUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const user = await UserServices.createUser(req.body)
 
-const getAllUsers = async (req: Request, res: Response) => {
-    try {
-        // Logic to get all users
-        res.status(200).json({ message: "All users retrieved successfully" });
-    } catch (error) {
-        res.status(500).json({ error: "Failed to retrieve users" });
-    }
-}
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "User Created Successfully",
+        data: user,
+    })
+
+});
+
+const getAllUsers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const result = await UserServices.getAllUsers();
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "All Users Retrieved Successfully",
+        data: result.data,
+        meta: result.meta
+    })
+});
 
 export const UserControllers = {
     createUser,
