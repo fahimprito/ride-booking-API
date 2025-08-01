@@ -44,16 +44,28 @@ const getRideHistory = async (userId: string) => {
     }
 };
 
-const getAllRides = async () => {
-    const rides = await Ride.find();
-    const totalRides = await Ride.countDocuments();
 
-    return {
-        data: rides,
-        meta: {
-            total: totalRides
+const getAllRides = async (verifiedToken: JwtPayload) => {
+    if (verifiedToken.role === 'DRIVER') {
+        const rides = await Ride.find({ status: RideStatus.REQUESTED });
+        const totalRides = await Ride.countDocuments({ status: RideStatus.REQUESTED });
+        return {
+            data: rides,
+            meta: {
+                total: totalRides
+            }
+        }
+    } else {
+        const rides = await Ride.find();
+        const totalRides = await Ride.countDocuments();
+        return {
+            data: rides,
+            meta: {
+                total: totalRides
+            }
         }
     }
+
 };
 
 const cancelRide = async (rideId: string, userId: string) => {
@@ -82,6 +94,10 @@ const acceptRideRequest = async (rideId: string, decodedToken: JwtPayload) => {
     const ride = await Ride.findById(rideId);
     if (!ride) {
         throw new AppError(httpStatus.NOT_FOUND, "Ride Not Found");
+    }
+
+    if (ride.status === RideStatus.ACCEPTED) {
+        throw new AppError(httpStatus.BAD_REQUEST, "This ride has already been accepted");
     }
 
     if (ride.status !== RideStatus.REQUESTED) {
@@ -122,8 +138,12 @@ const updateRide = async (rideId: string, payload: Partial<IRide>, decodedToken:
         throw new AppError(httpStatus.BAD_REQUEST, "Invalid ride status");
     }
 
-    if (ride.rider.toString() !== decodedToken.userId) {
+    if (!ride.driver || ride.driver.toString() !== decodedToken.userId) {
         throw new AppError(httpStatus.FORBIDDEN, "You are not authorized to update this ride");
+    }
+
+    if ((ride.driver || ride.driver !== null) && payload.status === RideStatus.REQUESTED) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Cannot change status to REQUESTED when a driver is assigned");
     }
 
     if (ride.status === RideStatus.COMPLETED || ride.status === RideStatus.CANCELLED) {
@@ -138,11 +158,15 @@ const updateRide = async (rideId: string, payload: Partial<IRide>, decodedToken:
         throw new AppError(httpStatus.BAD_REQUEST, "Ride can only be accepted when it is requested");
     }
 
-    if (payload.status === RideStatus.PICKED_UP && ride.status !== RideStatus.ACCEPTED) {
+    if (payload.status === RideStatus.PICKED_UP && ride.status === RideStatus.PICKED_UP) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Ride is already picked up");
+    } else if (payload.status === RideStatus.PICKED_UP && ride.status !== RideStatus.ACCEPTED) {
         throw new AppError(httpStatus.BAD_REQUEST, "Ride can only be picked up when it is accepted");
     }
 
-    if (payload.status === RideStatus.IN_TRANSIT && ride.status !== RideStatus.PICKED_UP) {
+    if (payload.status === RideStatus.IN_TRANSIT && ride.status === RideStatus.IN_TRANSIT) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Ride is already in transit");
+    } else if (payload.status === RideStatus.IN_TRANSIT && ride.status !== RideStatus.PICKED_UP) {
         throw new AppError(httpStatus.BAD_REQUEST, "Ride can only be in transit when it is picked up");
     }
 

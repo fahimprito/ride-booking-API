@@ -35,7 +35,8 @@ const getRideHistory = catchAsync(async (req: Request, res: Response, next: Next
 });
 
 const getAllRides = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const result = await RideServices.getAllRides();
+    const verifiedToken = req.user as JwtPayload;
+    const result = await RideServices.getAllRides(verifiedToken);
 
     sendResponse(res, {
         success: true,
