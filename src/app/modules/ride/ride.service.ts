@@ -28,6 +28,22 @@ const requestRide = async (payload: Partial<IRide>, userId: string) => {
     return ride;
 };
 
+const getRideHistory = async (userId: string) => {
+    const rides = await Ride.find({ rider: userId }).populate('driver', 'name email phone');
+
+    if (!rides || rides.length === 0) {
+        throw new AppError(httpStatus.NOT_FOUND, "No ride history found for this user");
+    }
+    const totalRides = await Ride.countDocuments({ rider: userId });
+
+    return {
+        data: rides,
+        meta: {
+            total: totalRides
+        }
+    }
+};
+
 const getAllRides = async () => {
     const rides = await Ride.find();
     const totalRides = await Ride.countDocuments();
@@ -115,5 +131,6 @@ export const RideServices = {
     getAllRides,
     cancelRide,
     getSingleRide,
-    updateRide
+    updateRide,
+    getRideHistory
 };

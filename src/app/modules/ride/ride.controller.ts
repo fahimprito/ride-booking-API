@@ -21,7 +21,18 @@ const requestRide = catchAsync(async (req: Request, res: Response, next: NextFun
 
 });
 
+const getRideHistory = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const userId = (req.user as JwtPayload).userId;
+    const result = await RideServices.getRideHistory(userId);
 
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Ride History Retrieved Successfully",
+        data: result.data,
+        meta: result.meta
+    })
+});
 
 const getAllRides = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const result = await RideServices.getAllRides();
@@ -82,5 +93,6 @@ export const RideControllers = {
     getAllRides,
     cancelRide,
     getSingleRide,
-    updateRide
+    updateRide,
+    getRideHistory
 };
