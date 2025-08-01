@@ -3,12 +3,15 @@ import { RideControllers } from "./ride.controller";
 import { checkAuth } from "../../middlewares/checkAuth";
 import { Role } from "../user/user.interface";
 import { validateRequest } from "../../middlewares/validateRequest";
-import { createRideSchema } from "./ride.validation";
+import { createRideSchema, updateRideSchema } from "./ride.validation";
 
 const router = express.Router()
 
 router.post("/request", validateRequest(createRideSchema), checkAuth(...Object.values(Role)), RideControllers.requestRide);
 router.get("/all-rides", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), RideControllers.getAllRides);
+
+router.get("/:id", checkAuth(...Object.values(Role)), RideControllers.getSingleRide);
 router.patch("/cancel/:id", checkAuth(...Object.values(Role)), RideControllers.cancelRide);
+router.patch("/update/:id", validateRequest(updateRideSchema), checkAuth(...Object.values(Role)), RideControllers.updateRide);
 
 export const RideRoutes = router;

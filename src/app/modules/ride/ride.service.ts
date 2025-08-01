@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 import AppError from "../../errorHelpers/AppError";
 import { User } from "../user/user.model";
 import { IRide, RideStatus } from "./ride.interface";
@@ -61,8 +62,58 @@ const cancelRide = async (rideId: string, userId: string) => {
     return ride;
 }
 
+const getSingleRide = async (rideId: string) => {
+    const ride = await Ride.findById(rideId);
+    if (!ride) {
+        throw new AppError(httpStatus.NOT_FOUND, "Ride Not Found");
+    }
+
+    return ride;
+};
+
+const updateRide = async (rideId: string, payload: Partial<IRide>, decodedToken: JwtPayload) => {
+    const ride = await Ride.findById(rideId);
+    if (!ride) {
+        throw new AppError(httpStatus.NOT_FOUND, "Ride Not Found");
+    }
+
+    if (payload.status && !Object.values(RideStatus).includes(payload.status)) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Invalid ride status");
+    }
+
+    if (ride.rider.toString() !== decodedToken.userId) {
+        throw new AppError(httpStatus.FORBIDDEN, "You are not authorized to update this ride");
+    }
+
+    if (ride.status === RideStatus.COMPLETED || ride.status === RideStatus.CANCELLED) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Cannot update a completed or cancelled ride");
+    }
+
+    if (payload.status === RideStatus.CANCELLED && ride.status !== RideStatus.REQUESTED && ride.status !== RideStatus.ACCEPTED) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Cannot cancel this ride now.");
+    }
+
+    if (payload.status === RideStatus.ACCEPTED && ride.status !== RideStatus.REQUESTED) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Ride can only be accepted when it is requested");
+    }
+
+    if (payload.status === RideStatus.PICKED_UP && ride.status !== RideStatus.ACCEPTED) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Ride can only be picked up when it is accepted");
+    }
+
+    if (payload.status === RideStatus.IN_TRANSIT && ride.status !== RideStatus.PICKED_UP) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Ride can only be in transit when it is picked up");
+    }
+
+    const updatedRide = await Ride.findByIdAndUpdate(rideId, payload, { new: true, runValidators: true });
+
+    return updatedRide;
+};
+
 export const RideServices = {
     requestRide,
     getAllRides,
-    cancelRide
-}
+    cancelRide,
+    getSingleRide,
+    updateRide
+};

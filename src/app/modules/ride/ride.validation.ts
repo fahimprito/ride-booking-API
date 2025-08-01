@@ -9,8 +9,7 @@ export const createRideSchema = z.object({
 });
 
 export const updateRideSchema = z.object({
-    rideId: z.string().min(1, "Ride ID is required"),
-    status: z.enum(Object.values(RideStatus) as [string]),
+    status: z.enum(Object.values(RideStatus) as [string]).optional(),
     driver: z.string().optional(),
     fare: z.number().optional(),
 });

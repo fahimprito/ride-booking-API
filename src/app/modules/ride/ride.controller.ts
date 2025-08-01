@@ -50,8 +50,37 @@ const cancelRide = catchAsync(async (req: Request, res: Response, next: NextFunc
     })
 });
 
+const getSingleRide = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const rideId = req.params.id;
+    const ride = await RideServices.getSingleRide(rideId);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Ride Retrieved Successfully",
+        data: ride,
+    })
+});
+
+const updateRide = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const rideId = req.params.id;
+    const payload = req.body;
+    const verifiedToken = req.user as JwtPayload;
+
+    const ride = await RideServices.updateRide(rideId, payload, verifiedToken);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Ride Updated Successfully",
+        data: ride,
+    })
+});
+
 export const RideControllers = {
     requestRide,
     getAllRides,
-    cancelRide
+    cancelRide,
+    getSingleRide,
+    updateRide
 };
