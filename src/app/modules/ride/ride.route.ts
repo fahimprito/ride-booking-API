@@ -12,6 +12,8 @@ router.get("/all-rides", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), RideController
 router.get("/ride-history", checkAuth(Role.RIDER), RideControllers.getRideHistory);
 
 router.get("/:id", checkAuth(...Object.values(Role)), RideControllers.getSingleRide);
+
+router.patch("/accept/:id", checkAuth(...Object.values(Role)), RideControllers.acceptRideRequest);
 router.patch("/cancel/:id", checkAuth(...Object.values(Role)), RideControllers.cancelRide);
 router.patch("/update/:id", validateRequest(updateRideSchema), checkAuth(...Object.values(Role)), RideControllers.updateRide);
 

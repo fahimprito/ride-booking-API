@@ -78,6 +78,31 @@ const cancelRide = async (rideId: string, userId: string) => {
     return ride;
 }
 
+const acceptRideRequest = async (rideId: string, decodedToken: JwtPayload) => {
+    const ride = await Ride.findById(rideId);
+    if (!ride) {
+        throw new AppError(httpStatus.NOT_FOUND, "Ride Not Found");
+    }
+
+    if (ride.status !== RideStatus.REQUESTED) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Ride can only be accepted when it is requested");
+    }
+
+    if (ride.driver || ride.driver !== null) {
+        throw new AppError(httpStatus.BAD_REQUEST, "This ride has already been accepted by another driver");
+    }
+
+    if (decodedToken.role !== 'DRIVER') {
+        throw new AppError(httpStatus.FORBIDDEN, "You are not authorized to accept this ride");
+    }
+
+    ride.driver = decodedToken.userId;
+    ride.status = RideStatus.ACCEPTED;
+    await ride.save();
+
+    return ride;
+}
+
 const getSingleRide = async (rideId: string) => {
     const ride = await Ride.findById(rideId);
     if (!ride) {
@@ -132,5 +157,6 @@ export const RideServices = {
     cancelRide,
     getSingleRide,
     updateRide,
-    getRideHistory
+    getRideHistory,
+    acceptRideRequest
 };

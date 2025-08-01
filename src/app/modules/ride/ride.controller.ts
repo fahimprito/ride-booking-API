@@ -88,11 +88,26 @@ const updateRide = catchAsync(async (req: Request, res: Response, next: NextFunc
     })
 });
 
+const acceptRideRequest = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const rideId = req.params.id;
+    const verifiedToken = req.user as JwtPayload;
+
+    const ride = await RideServices.acceptRideRequest(rideId, verifiedToken);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Ride Request Accepted Successfully",
+        data: ride,
+    })
+});
+
 export const RideControllers = {
     requestRide,
     getAllRides,
     cancelRide,
     getSingleRide,
     updateRide,
-    getRideHistory
+    getRideHistory,
+    acceptRideRequest
 };
