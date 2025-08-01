@@ -9,5 +9,6 @@ const router = express.Router()
 
 router.post("/request", validateRequest(createRideSchema), checkAuth(...Object.values(Role)), RideControllers.requestRide);
 router.get("/all-rides", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), RideControllers.getAllRides);
+router.patch("/cancel/:id", checkAuth(...Object.values(Role)), RideControllers.cancelRide);
 
 export const RideRoutes = router;

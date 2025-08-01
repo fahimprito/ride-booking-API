@@ -39,7 +39,30 @@ const getAllRides = async () => {
     }
 };
 
+const cancelRide = async (rideId: string, userId: string) => {
+    const ride = await Ride.findById(rideId);
+    if (!ride) {
+        throw new AppError(httpStatus.NOT_FOUND, "Ride Not Found");
+    }
+
+    if (ride.rider.toString() !== userId) {
+        throw new AppError(httpStatus.FORBIDDEN, "You are not authorized to cancel this ride");
+    }
+
+    if (ride.status !== RideStatus.REQUESTED && ride.status !== RideStatus.ACCEPTED) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Cannot cancel this ride now.");
+    }
+
+
+    ride.status = RideStatus.CANCELLED;
+    ride.isCancelled = true;
+    await ride.save();
+
+    return ride;
+}
+
 export const RideServices = {
     requestRide,
-    getAllRides
+    getAllRides,
+    cancelRide
 }
