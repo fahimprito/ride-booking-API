@@ -16,6 +16,15 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
     if (!isUserExist) {
         throw new AppError(httpStatus.BAD_REQUEST, "Email does not exist")
     }
+    if (isUserExist.isDeleted) {
+        throw new AppError(httpStatus.BAD_REQUEST, "User is deleted")
+    }
+    if (isUserExist.isActive === "BLOCKED") {
+        throw new AppError(httpStatus.BAD_REQUEST, `User is ${isUserExist.isActive}, Please contact admin to activate your account`)
+    }
+    if (isUserExist.isActive === "INACTIVE") {
+        throw new AppError(httpStatus.BAD_REQUEST, `User is still suspended, Please contact admin to activate your account`)
+    }
 
     const isPasswordMatched = await bcryptjs.compare(password as string, isUserExist.password as string)
     if (!isPasswordMatched) {

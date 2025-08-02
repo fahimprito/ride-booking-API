@@ -15,5 +15,6 @@ router.patch("/availability", validateRequest(updateUserZodSchema), checkAuth(Ro
 
 router.get("/:id", checkAuth(...Object.values(Role)), UserControllers.getSingleUser)
 router.patch("/:id", validateRequest(updateUserZodSchema), checkAuth(...Object.values(Role)), UserControllers.updateUser)
+router.patch("/:id/status", validateRequest(updateUserZodSchema), checkAuth(Role.ADMIN, Role.SUPER_ADMIN), UserControllers.updateUserStatus)
 
 export const UserRoutes = router;
