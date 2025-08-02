@@ -119,7 +119,7 @@ http://localhost:5000/
 | Method | Endpoint                         | Access             | Description                          |
 |--------|----------------------------------|--------------------|--------------------------------------|
 | POST   | /api/ride/request                | Any Authenticated  | Request a new ride                   |
-| GET    | /api/ride/all-rides              | Admin, Super Admin, Driver | Get all rides               |
+| GET    | /api/ride/all-rides              | Admin, Super Admin, Driver | Get all rides                |
 | GET    | /api/ride/ride-history           | Rider              | View rider's ride history            |
 | GET    | /api/ride/earning-history        | Driver             | View driver's earnings history       |
 | GET    | /api/ride/:id                    | Any Authenticated  | Get ride details by ID               |
