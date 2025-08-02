@@ -96,7 +96,7 @@ const cancelRide = async (rideId: string, userId: string) => {
         throw new AppError(httpStatus.FORBIDDEN, "You are not authorized to cancel this ride");
     }
 
-    if (ride.status !== RideStatus.REQUESTED && ride.status !== RideStatus.ACCEPTED) {
+    if (ride.status !== RideStatus.REQUESTED) {
         throw new AppError(httpStatus.BAD_REQUEST, "Cannot cancel this ride now.");
     }
 
@@ -170,7 +170,7 @@ const updateRide = async (rideId: string, payload: Partial<IRide>, decodedToken:
         throw new AppError(httpStatus.BAD_REQUEST, "Cannot update a completed or cancelled ride");
     }
 
-    if (payload.status === RideStatus.CANCELLED && ride.status !== RideStatus.REQUESTED && ride.status !== RideStatus.ACCEPTED) {
+    if (payload.status === RideStatus.CANCELLED && ride.status !== RideStatus.REQUESTED) {
         throw new AppError(httpStatus.BAD_REQUEST, "Cannot cancel this ride now.");
     }
 
