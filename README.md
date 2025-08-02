@@ -82,7 +82,7 @@ npm start
 
 Deploy URL
 
-http://localhost:5000/
+https://ride-booking-api-six.vercel.app/
 
 
 ## Routes

@@ -1,0 +1,683 @@
+{
+	"info": {
+		"_postman_id": "98620ff9-6f49-4a1b-a20e-3d335ca4c819",
+		"name": "Ride-Booking-API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45585865"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "get all users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhhODk0MzgwZDM0ZWYzNTFjOTM0NDUiLCJlbWFpbCI6InN1cGVyQGVtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1Mzk4ODMzMSwiZXhwIjoxNzU0MDc0NzMxfQ.qQX-OTVAFFPicmhvzUV9QscDn7DfmGDvno424B54s5w",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tour\": \"6883c49bf96198f44df6950d\",\r\n    \"guestCount\": 4\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/user/all-users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"all-users"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "ad",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODczNGIwNDYxYzUyZDA2MWMxODVmMWQiLCJlbWFpbCI6InN1cGVyQGVtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1MzcxNzAzNiwiZXhwIjoxNzUzNzI0MjM2fQ.htkoryekMR5PDhO45z-vJeuSk7zQne7uMQy9pJNXJb0",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"fahim Ahmed\",\r\n    \"email\": \"fahim@gmail.com\",\r\n    \"password\": \"Asdasd1@\",\r\n    // \"role\":  \"DIVER\",\r\n    \"phone\": \"01254687954\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/user/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"register"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "ad",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "single user",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhhODk0MzgwZDM0ZWYzNTFjOTM0NDUiLCJlbWFpbCI6InN1cGVyQGVtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1Mzk4ODMzMSwiZXhwIjoxNzU0MDc0NzMxfQ.qQX-OTVAFFPicmhvzUV9QscDn7DfmGDvno424B54s5w",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/user/688b9ff4206034f3ddbc066d",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"688b9ff4206034f3ddbc066d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhhODk0MzgwZDM0ZWYzNTFjOTM0NDUiLCJlbWFpbCI6InN1cGVyQGVtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1Mzk4ODMzMSwiZXhwIjoxNzU0MDc0NzMxfQ.qQX-OTVAFFPicmhvzUV9QscDn7DfmGDvno424B54s5w",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"01254687954\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/user/688a91b4569d6c89662e4f65",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"688a91b4569d6c89662e4f65"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update Availability",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhiYmJhZTkyMjQ1OGE0YjE0MGJkYzkiLCJlbWFpbCI6ImRyaXZlckBnbWFpbC5jb20iLCJyb2xlIjoiRFJJVkVSIiwiaWF0IjoxNzU0MTMwMDE2LCJleHAiOjE3NTQyMTY0MTZ9._c-DjPJiIG8G2HA4fbfiluVjJrpuhSDrVMcFkOAixDQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n//   \"isAvailable\": \"ONLINE\"\r\n  \"isAvailable\": \"OFFLINE\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/user/availability",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"availability"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "ad",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update User Status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhhODk0MzgwZDM0ZWYzNTFjOTM0NDUiLCJlbWFpbCI6InN1cGVyQGVtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1NDEzMDgyOCwiZXhwIjoxNzU0MjE3MjI4fQ.JYH0heX9FpG4oXXTsILjUiNT9poIvzGDyuqrf0wSS6w",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // \"isActive\": \"ACTIVE\"\r\n    // \"isActive\": \"INACTIVE\"\r\n    \"isActive\": \"BLOCKED\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/user/688a91b4569d6c89662e4f65/status",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"688a91b4569d6c89662e4f65",
+								"status"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\r\n//     \"email\": \"super@email.com\",\r\n//     \"password\": \"12345678\"\r\n// }\r\n{\r\n    \"email\": \"fahim@gmail.com\",\r\n    // \"email\": \"messi@gmail.com\",\r\n    // \"email\": \"driver@gmail.com\",\r\n    \"password\": \"Asdasd1@\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ride-booking-api-six.vercel.app/api/auth/login",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-six",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh-token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/auth/refresh-token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/auth/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhhODk0MzgwZDM0ZWYzNTFjOTM0NDUiLCJlbWFpbCI6InN1cGVyQGVtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1Mzk4NTcyMywiZXhwIjoxNzU0MDcyMTIzfQ.qufQPWoBgdky5Qw3PIc0MM1oO83tX-wlBur2MkiW9Fc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"oldPassword\": \"12345678asdasd\",\r\n    \"newPassword\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/auth/reset-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"auth",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ride",
+			"item": [
+				{
+					"name": "Request / create ride",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhlMzliMDcxOTk2Nzc3MDc5MDViOWIiLCJlbWFpbCI6ImZhaGltQGdtYWlsLmNvbSIsInJvbGUiOiJSSURFUiIsImlhdCI6MTc1NDE1MTM2NywiZXhwIjoxNzU0MjM3NzY3fQ.7uxoVdxQMSrwyiVshSzSxiLnMo4dLTTgnRiklnf-mC0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"pickupLocation\": \"aftabnagar, Dhaka\",\r\n  \"destinationLocation\": \"dasherkandi, Dhaka\",\r\n  \"fare\": 150\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ride-booking-api-six.vercel.app/api/ride/request",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-six",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"ride",
+								"request"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "ad",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-rides",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhhODk0MzgwZDM0ZWYzNTFjOTM0NDUiLCJlbWFpbCI6InN1cGVyQGVtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1NDA4Mjc1NywiZXhwIjoxNzU0MTY5MTU3fQ.HAVpy7lv4MLBv_PGLHVOIiiSS7AsP2LJz0ad34uRCk0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tour\": \"6883c49bf96198f44df6950d\",\r\n    \"guestCount\": 4\r\n}"
+						},
+						"url": {
+							"raw": "https://ride-booking-api-six.vercel.app/api/ride/all-rides",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-six",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"ride",
+								"all-rides"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "ad",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "single-ride",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhhODk0MzgwZDM0ZWYzNTFjOTM0NDUiLCJlbWFpbCI6InN1cGVyQGVtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1NDA4MjkzMSwiZXhwIjoxNzU0MTY5MzMxfQ.TAXJYua9gTwoXRGO8R-tvnO6-UtQUOpLTREqKhhjRNM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tour\": \"6883c49bf96198f44df6950d\",\r\n    \"guestCount\": 4\r\n}"
+						},
+						"url": {
+							"raw": "https://ride-booking-api-six.vercel.app/api/ride/688e39b07199677707905b9b",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-six",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"ride",
+								"688e39b07199677707905b9b"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "ad",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ride-history",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhiOWZmNDIwNjAzNGYzZGRiYzA2NmQiLCJlbWFpbCI6InlhbWFsQGdtYWlsLmNvbSIsInJvbGUiOiJSSURFUiIsImlhdCI6MTc1NDA3MTg4MiwiZXhwIjoxNzU0MTU4MjgyfQ.jXBcdZw4wAz5mLxFDIgNpTliJYiqU5SFWJHRdj2Vwlw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tour\": \"6883c49bf96198f44df6950d\",\r\n    \"guestCount\": 4\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/ride/ride-history",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"ride",
+								"ride-history"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "ad",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "earning-history",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhiYmJhZTkyMjQ1OGE0YjE0MGJkYzkiLCJlbWFpbCI6ImRyaXZlckBnbWFpbC5jb20iLCJyb2xlIjoiRFJJVkVSIiwiaWF0IjoxNzU0MTE5MjExLCJleHAiOjE3NTQyMDU2MTF9.Ynxqy-lfnoxtSY1CpfNHi9eHKRIZ5sRCKzDDppWHxrw",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://ride-booking-api-six.vercel.app/api/ride/earning-history",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-six",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"ride",
+								"earning-history"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cancel-ride",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhiOWZmNDIwNjAzNGYzZGRiYzA2NmQiLCJlbWFpbCI6InlhbWFsQGdtYWlsLmNvbSIsInJvbGUiOiJSSURFUiIsImlhdCI6MTc1NDEzNjY0OCwiZXhwIjoxNzU0MjIzMDQ4fQ.e2uQPxh7WICETAEJdiW8lVLnL6MzE1awGPdEJ3lEAf4",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"pickupLocation\": \"south-banasree, Dhaka\",\r\n  \"destinationLocation\": \"bashundhara, Dhaka\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/ride/cancel/688da78af624648e38d5c02c",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"ride",
+								"cancel",
+								"688da78af624648e38d5c02c"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "ad",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-ride",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhiYmJhZTkyMjQ1OGE0YjE0MGJkYzkiLCJlbWFpbCI6ImRyaXZlckBnbWFpbC5jb20iLCJyb2xlIjoiRFJJVkVSIiwiaWF0IjoxNzU0MDc0NTk3LCJleHAiOjE3NTQxNjA5OTd9.cUgVNxefgYt_0fkF6Ufsh5DOWkvxI8u2tCw9QrYysVE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n//   \"pickupLocation\": \"south-banasree, Dhaka\",\r\n//   \"destinationLocation\": \"bashundhara, Dhaka\",\r\n//   \"status\": \"requested\"\r\n//   \"status\": \"picked_up\"\r\n//   \"status\": \"in_transit\"\r\n  \"status\": \"completed\"\r\n//   \"status\": \"cancelled\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ride-booking-api-six.vercel.app/api/ride/update/688e39ef488a12b0ff306214",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-six",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"ride",
+								"update",
+								"688e39ef488a12b0ff306214"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "ad",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accept-ride",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhiYmJhZTkyMjQ1OGE0YjE0MGJkYzkiLCJlbWFpbCI6ImRyaXZlckBnbWFpbC5jb20iLCJyb2xlIjoiRFJJVkVSIiwiaWF0IjoxNzU0MDc1MjYxLCJleHAiOjE3NTQxNjE2NjF9.rdO4PeOxZorNU7jfsFnCRRcpmL5o1_fg1ei_mMp6vJs",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"pickupLocation\": \"uttara, Dhaka\",\r\n  \"destinationLocation\": \"bashundhara, Dhaka\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "https://ride-booking-api-six.vercel.app/api/ride/accept/688e39ef488a12b0ff306214",
+							"protocol": "https",
+							"host": [
+								"ride-booking-api-six",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"ride",
+								"accept",
+								"688e39ef488a12b0ff306214"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "ad",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
