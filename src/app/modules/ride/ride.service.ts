@@ -103,6 +103,7 @@ const cancelRide = async (rideId: string, userId: string) => {
 
     ride.status = RideStatus.CANCELLED;
     ride.isCancelled = true;
+    ride.timestamps.cancelledAt = new Date();
     await ride.save();
 
     return ride;
@@ -132,6 +133,7 @@ const acceptRideRequest = async (rideId: string, decodedToken: JwtPayload) => {
 
     ride.driver = decodedToken.userId;
     ride.status = RideStatus.ACCEPTED;
+    ride.timestamps.acceptedAt = new Date();
     await ride.save();
 
     return ride;
@@ -188,9 +190,41 @@ const updateRide = async (rideId: string, payload: Partial<IRide>, decodedToken:
         throw new AppError(httpStatus.BAD_REQUEST, "Ride can only be in transit when it is picked up");
     }
 
-    const updatedRide = await Ride.findByIdAndUpdate(rideId, payload, { new: true, runValidators: true });
+    const updateData = { ...payload };
+
+    if (payload.status === RideStatus.PICKED_UP) {
+        updateData.status = RideStatus.PICKED_UP;
+        updateData.timestamps = {
+            ...ride.timestamps,
+            pickedUpAt: new Date(),
+        };
+    } else if (payload.status === RideStatus.IN_TRANSIT) {
+        updateData.status = RideStatus.IN_TRANSIT;
+        updateData.timestamps = {
+            ...ride.timestamps,
+            inTransitAt: new Date(),
+        };
+    } else if (payload.status === RideStatus.COMPLETED) {
+        updateData.status = RideStatus.COMPLETED;
+        updateData.timestamps = {
+            ...ride.timestamps,
+            completedAt: new Date(),
+        };
+    } else if (payload.status === RideStatus.CANCELLED) {
+        updateData.status = RideStatus.CANCELLED;
+        updateData.timestamps = {
+            ...ride.timestamps,
+            cancelledAt: new Date(),
+        };
+    }
+
+    const updatedRide = await Ride.findByIdAndUpdate(rideId, updateData, {
+        new: true,
+        runValidators: true,
+    });
 
     return updatedRide;
+
 };
 
 export const RideServices = {
