@@ -1,5 +1,5 @@
 import AppError from "../../errorHelpers/AppError";
-import { IAuthProvider, IUser, Role } from "./user.interface";
+import { IAuthProvider, isAvailable, IUser, Role } from "./user.interface";
 import { User } from "./user.model";
 import httpStatus from "http-status-codes";
 import bcryptjs from "bcryptjs";
@@ -88,9 +88,26 @@ const getSingleUser = async (id: string) => {
     }
 };
 
+const updateAvailability = async (payload: { isAvailable: isAvailable }, decodedToken: JwtPayload) => {
+    if (decodedToken.role !== Role.DRIVER) {
+        throw new AppError(httpStatus.FORBIDDEN, "You are not authorized to update availability");
+    }
+
+    const user = await User.findById(decodedToken.userId);
+    if (!user) {
+        throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    }
+
+    user.isAvailable = payload.isAvailable;
+    await user.save();
+
+    return user;
+}
+
 export const UserServices = {
     createUser,
     getAllUsers,
     updateUser,
-    getSingleUser
+    getSingleUser,
+    updateAvailability
 };
