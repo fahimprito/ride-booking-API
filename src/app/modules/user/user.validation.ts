@@ -1,5 +1,5 @@
 import z from "zod";
-import { IsActive, Role } from "./user.interface";
+import { IsActive, isAvailable, Role } from "./user.interface";
 
 export const createUserZodSchema = z.object({
     name: z
@@ -69,6 +69,9 @@ export const updateUserZodSchema = z.object({
         .optional(),
     isVerified: z
         .boolean({ error: "isVerified must be true or false" })
+        .optional(),
+    isAvailable: z
+        .enum(Object.values(isAvailable) as [string])
         .optional(),
     address: z
         .string({ error: "Address must be string" })

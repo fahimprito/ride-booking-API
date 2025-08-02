@@ -4,6 +4,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status-codes";
 import { UserServices } from "./user.service";
 import { catchAsync } from "../../utils/catchAsync";
+import { JwtPayload } from "jsonwebtoken";
 
 const createUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = await UserServices.createUser(req.body)
@@ -58,9 +59,40 @@ const getSingleUser = catchAsync(async (req: Request, res: Response, next: NextF
     })
 })
 
+const updateAvailability = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const payload = req.body;
+    const verifiedToken = req.user as JwtPayload;
+
+    const user = await UserServices.updateAvailability(payload, verifiedToken);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "User Availability Updated Successfully",
+        data: user,
+    });
+});
+
+const updateUserStatus = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.id;
+    const { isActive } = req.body;
+    const verifiedToken = req.user as JwtPayload;
+
+    const user = await UserServices.updateUserStatus(userId, { isActive }, verifiedToken);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "User Status Updated Successfully",
+        data: user,
+    });
+});
+
 export const UserControllers = {
     createUser,
     getAllUsers,
     updateUser,
-    getSingleUser
-}
+    getSingleUser,
+    updateAvailability,
+    updateUserStatus
+};

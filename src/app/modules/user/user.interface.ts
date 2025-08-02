@@ -19,6 +19,11 @@ export enum IsActive {
     BLOCKED = "BLOCKED"
 }
 
+export enum isAvailable {
+    ONLINE = "ONLINE",
+    OFFLINE = "OFFLINE",
+}
+
 export interface IUser {
     _id?: Types.ObjectId;
     name: string;
@@ -30,6 +35,7 @@ export interface IUser {
     isDeleted?: boolean;
     isActive?: IsActive;
     isVerified?: boolean;
+    isAvailable?: isAvailable;
 
     role: Role;
     auths: IAuthProvider[]

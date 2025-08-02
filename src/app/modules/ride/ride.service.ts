@@ -1,0 +1,239 @@
+import { JwtPayload } from "jsonwebtoken";
+import AppError from "../../errorHelpers/AppError";
+import { User } from "../user/user.model";
+import { IRide, RideStatus } from "./ride.interface";
+import { Ride } from "./ride.model";
+import httpStatus from "http-status-codes";
+
+const requestRide = async (payload: Partial<IRide>, userId: string) => {
+
+    const user = await User.findById(userId);
+    if (!userId) {
+        throw new AppError(httpStatus.BAD_REQUEST, "User ID is required to request a ride");
+    }
+    if (!user?.phone) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Please Update Your Profile to Book a Ride.")
+    }
+
+    if (!payload.pickupLocation || !payload.destinationLocation) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Pickup and Destination locations are required");
+    }
+
+    const ride = await Ride.create([{
+        rider: userId,
+        status: RideStatus.REQUESTED,
+        ...payload
+    }]);
+
+    return ride;
+};
+
+const getRideHistory = async (userId: string) => {
+    const rides = await Ride.find({ rider: userId }).populate('driver', 'name email phone');
+
+    if (!rides || rides.length === 0) {
+        throw new AppError(httpStatus.NOT_FOUND, "No ride history found for this user");
+    }
+    const totalRides = await Ride.countDocuments({ rider: userId });
+
+    return {
+        data: rides,
+        meta: {
+            total: totalRides
+        }
+    }
+};
+
+const getEarningHistory = async (userId: string) => {
+    const completedRides = await Ride.find({ driver: userId, status: RideStatus.COMPLETED });
+
+    if (!completedRides || completedRides.length === 0) {
+        throw new AppError(httpStatus.NOT_FOUND, "No earning history found for this driver");
+    }
+    const totalEarnings = completedRides.reduce((acc, ride) => acc + (ride.fare || 0), 0);
+    const totalRides = completedRides.length;
+
+    return {
+        data: completedRides,
+        meta: {
+            total: totalRides,
+            totalEarnings: totalEarnings
+        }
+    }
+}
+
+
+const getAllRides = async (verifiedToken: JwtPayload) => {
+    if (verifiedToken.role === 'DRIVER') {
+        const rides = await Ride.find({ status: RideStatus.REQUESTED });
+        const totalRides = await Ride.countDocuments({ status: RideStatus.REQUESTED });
+        return {
+            data: rides,
+            meta: {
+                total: totalRides
+            }
+        }
+    } else {
+        const rides = await Ride.find();
+        const totalRides = await Ride.countDocuments();
+        return {
+            data: rides,
+            meta: {
+                total: totalRides
+            }
+        }
+    }
+
+};
+
+const cancelRide = async (rideId: string, userId: string) => {
+    const ride = await Ride.findById(rideId);
+    if (!ride) {
+        throw new AppError(httpStatus.NOT_FOUND, "Ride Not Found");
+    }
+
+    if (ride.rider.toString() !== userId) {
+        throw new AppError(httpStatus.FORBIDDEN, "You are not authorized to cancel this ride");
+    }
+
+    if (ride.status !== RideStatus.REQUESTED) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Cannot cancel this ride now.");
+    }
+
+
+    ride.status = RideStatus.CANCELLED;
+    ride.isCancelled = true;
+    ride.timestamps.cancelledAt = new Date();
+    await ride.save();
+
+    return ride;
+}
+
+const acceptRideRequest = async (rideId: string, decodedToken: JwtPayload) => {
+    const ride = await Ride.findById(rideId);
+    if (!ride) {
+        throw new AppError(httpStatus.NOT_FOUND, "Ride Not Found");
+    }
+
+    if (ride.status === RideStatus.ACCEPTED) {
+        throw new AppError(httpStatus.BAD_REQUEST, "This ride has already been accepted");
+    }
+
+    if (ride.status !== RideStatus.REQUESTED) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Ride can only be accepted when it is requested");
+    }
+
+    if (ride.driver || ride.driver !== null) {
+        throw new AppError(httpStatus.BAD_REQUEST, "This ride has already been accepted by another driver");
+    }
+
+    if (decodedToken.role !== 'DRIVER') {
+        throw new AppError(httpStatus.FORBIDDEN, "You are not authorized to accept this ride");
+    }
+
+    ride.driver = decodedToken.userId;
+    ride.status = RideStatus.ACCEPTED;
+    ride.timestamps.acceptedAt = new Date();
+    await ride.save();
+
+    return ride;
+}
+
+const getSingleRide = async (rideId: string) => {
+    const ride = await Ride.findById(rideId);
+    if (!ride) {
+        throw new AppError(httpStatus.NOT_FOUND, "Ride Not Found");
+    }
+
+    return ride;
+};
+
+const updateRide = async (rideId: string, payload: Partial<IRide>, decodedToken: JwtPayload) => {
+    const ride = await Ride.findById(rideId);
+    if (!ride) {
+        throw new AppError(httpStatus.NOT_FOUND, "Ride Not Found");
+    }
+
+    if (payload.status && !Object.values(RideStatus).includes(payload.status)) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Invalid ride status");
+    }
+
+    if (!ride.driver || ride.driver.toString() !== decodedToken.userId) {
+        throw new AppError(httpStatus.FORBIDDEN, "You are not authorized to update this ride");
+    }
+
+    if ((ride.driver || ride.driver !== null) && payload.status === RideStatus.REQUESTED) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Cannot change status to REQUESTED when a driver is assigned");
+    }
+
+    if (ride.status === RideStatus.COMPLETED || ride.status === RideStatus.CANCELLED) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Cannot update a completed or cancelled ride");
+    }
+
+    if (payload.status === RideStatus.CANCELLED && ride.status !== RideStatus.REQUESTED) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Cannot cancel this ride now.");
+    }
+
+    if (payload.status === RideStatus.ACCEPTED && ride.status !== RideStatus.REQUESTED) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Ride can only be accepted when it is requested");
+    }
+
+    if (payload.status === RideStatus.PICKED_UP && ride.status === RideStatus.PICKED_UP) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Ride is already picked up");
+    } else if (payload.status === RideStatus.PICKED_UP && ride.status !== RideStatus.ACCEPTED) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Ride can only be picked up when it is accepted");
+    }
+
+    if (payload.status === RideStatus.IN_TRANSIT && ride.status === RideStatus.IN_TRANSIT) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Ride is already in transit");
+    } else if (payload.status === RideStatus.IN_TRANSIT && ride.status !== RideStatus.PICKED_UP) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Ride can only be in transit when it is picked up");
+    }
+
+    const updateData = { ...payload };
+
+    if (payload.status === RideStatus.PICKED_UP) {
+        updateData.status = RideStatus.PICKED_UP;
+        updateData.timestamps = {
+            ...ride.timestamps,
+            pickedUpAt: new Date(),
+        };
+    } else if (payload.status === RideStatus.IN_TRANSIT) {
+        updateData.status = RideStatus.IN_TRANSIT;
+        updateData.timestamps = {
+            ...ride.timestamps,
+            inTransitAt: new Date(),
+        };
+    } else if (payload.status === RideStatus.COMPLETED) {
+        updateData.status = RideStatus.COMPLETED;
+        updateData.timestamps = {
+            ...ride.timestamps,
+            completedAt: new Date(),
+        };
+    } else if (payload.status === RideStatus.CANCELLED) {
+        updateData.status = RideStatus.CANCELLED;
+        updateData.timestamps = {
+            ...ride.timestamps,
+            cancelledAt: new Date(),
+        };
+    }
+
+    const updatedRide = await Ride.findByIdAndUpdate(rideId, updateData, {
+        new: true,
+        runValidators: true,
+    });
+
+    return updatedRide;
+
+};
+
+export const RideServices = {
+    requestRide,
+    getAllRides,
+    cancelRide,
+    getSingleRide,
+    updateRide,
+    getRideHistory,
+    acceptRideRequest,
+    getEarningHistory
+};
