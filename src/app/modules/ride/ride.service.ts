@@ -44,6 +44,24 @@ const getRideHistory = async (userId: string) => {
     }
 };
 
+const getEarningHistory = async (userId: string) => {
+    const completedRides = await Ride.find({ driver: userId, status: RideStatus.COMPLETED });
+
+    if (!completedRides || completedRides.length === 0) {
+        throw new AppError(httpStatus.NOT_FOUND, "No earning history found for this driver");
+    }
+    const totalEarnings = completedRides.reduce((acc, ride) => acc + (ride.fare || 0), 0);
+    const totalRides = completedRides.length;
+
+    return {
+        data: completedRides,
+        meta: {
+            total: totalRides,
+            totalEarnings: totalEarnings
+        }
+    }
+}
+
 
 const getAllRides = async (verifiedToken: JwtPayload) => {
     if (verifiedToken.role === 'DRIVER') {
@@ -182,5 +200,6 @@ export const RideServices = {
     getSingleRide,
     updateRide,
     getRideHistory,
-    acceptRideRequest
+    acceptRideRequest,
+    getEarningHistory
 };
