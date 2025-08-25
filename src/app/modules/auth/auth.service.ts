@@ -20,7 +20,7 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
         throw new AppError(httpStatus.BAD_REQUEST, "User is deleted")
     }
     if (isUserExist.isActive === "BLOCKED") {
-        throw new AppError(httpStatus.BAD_REQUEST, `User is ${isUserExist.isActive}, Please contact admin to activate your account`)
+        throw new AppError(httpStatus.BAD_REQUEST, `User is blocked, Please contact admin to activate your account`)
     }
     if (isUserExist.isActive === "INACTIVE") {
         throw new AppError(httpStatus.BAD_REQUEST, `User is still suspended, Please contact admin to activate your account`)
