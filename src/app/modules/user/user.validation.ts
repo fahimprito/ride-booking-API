@@ -32,7 +32,9 @@ export const createUserZodSchema = z.object({
     address: z
         .string({ error: "Address must be string" })
         .max(200, { message: "Address cannot exceed 200 characters." })
-        .optional()
+        .optional(),
+    role: z
+        .enum(Object.values(Role) as [string]),
 })
 
 export const updateUserZodSchema = z.object({
