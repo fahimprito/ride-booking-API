@@ -88,6 +88,13 @@ const getSingleUser = async (id: string) => {
     }
 };
 
+const getMe = async (userId: string) => {
+    const user = await User.findById(userId).select("-password");
+    return {
+        data: user
+    }
+};
+
 const updateAvailability = async (payload: { isAvailable: isAvailable }, decodedToken: JwtPayload) => {
     if (decodedToken.role !== Role.DRIVER) {
         throw new AppError(httpStatus.FORBIDDEN, "You are not authorized to update availability");
@@ -119,10 +126,11 @@ const updateUserStatus = async (userId: string, payload: { isActive: IsActive },
 
     return user;
 }
-    
+
 export const UserServices = {
     createUser,
     getAllUsers,
+    getMe,
     updateUser,
     getSingleUser,
     updateAvailability,
